@@ -13,6 +13,8 @@ var contrast = 0.02;
 
 var iterationsFactor = 10;
 
+var orbitTrapping = true;
+
 function preload() {
 	MB = loadShader("assets/shader.vert", "assets/shader.frag");
 }
@@ -40,6 +42,8 @@ function draw() {
 	MB.setUniform("iterations", 3.5/pow(cameraScale, 0.125) * iterationsFactor);
 	MB.setUniform("trap", [trapX, trapY]);
 
+	MB.setUniform("orbitTrapping", orbitTrapping);
+
 	rect(0, 0, width, height);
 
 	shader(MB);
@@ -60,5 +64,11 @@ function mouseWheel(event) {
 		iterationsFactor -= round(event.delta * iterSpeed);
 	} else {
 		cameraScale += (count * scrollSpeed) * cameraScale;
+	}
+}
+
+function keyPressed() {
+	if(key === 's') {
+		orbitTrapping = !orbitTrapping;
 	}
 }

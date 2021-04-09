@@ -12,8 +12,27 @@ uniform float contrast;
 uniform vec2 g1;
 uniform vec2 g2;
 
-vec2 map(vec2 value, vec2 inMin, vec2 inMax, vec2 outMin, vec2 outMax) {
-  return outMin + (outMax - outMin) * (value - inMin) / (inMax - inMin);
+uniform bool orbitTrapping;
+
+float rand(float n) {
+    return fract(sin(n) * 43758.5453123);
+}
+
+float rand(vec2 n) {
+    return rand(rand(n.x) + rand(n.y));
+}
+
+// https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83
+float noise(float p){
+	float fl = floor(p);
+  float fc = fract(p);
+	return mix(rand(fl), rand(fl + 1.0), fc);
+}
+	
+float noise(vec2 n) {
+	const vec2 d = vec2(0.0, 1.0);
+    vec2 b = floor(n), f = smoothstep(vec2(0.0), vec2(1.0), fract(n));
+	return mix(mix(rand(b), rand(b + d.yx), f.x), mix(rand(b + d.xy), rand(b + d.yy), f.x), f.y);
 }
 
 // https://github.com/hughsk/glsl-hsv2rgb/blob/master/index.glsl
@@ -25,6 +44,10 @@ vec3 hsv2rgb(vec3 c) {
 
 vec2 multComplex(vec2 p1, vec2 p2) {
     return vec2(p1.x * p2.x - p1.y * p2.y, p1.x * p2.y + p1.y * p2.x);
+}
+
+vec3 lut(float value) {
+    return hsv2rgb(vec3(value/2.0 + 0.5, 1.0 - value, value));
 }
 
 vec3 iterate(vec2 c) {
@@ -44,7 +67,7 @@ vec3 iterate(vec2 c) {
             break;
         }
 	
-        float pointTrap = distance(z, trap);
+        float pointTrap = 1.0/distance(z, trap);
         minPointTrap = min(minPointTrap, pointTrap);
 
         i = index;
@@ -53,7 +76,11 @@ vec3 iterate(vec2 c) {
     float value = i/iterations;
     // minPointTrap = sqrt(minPointTrap)*contrast*iterations;
     
-    return hsv2rgb(vec3(value/2.0 + 0.5, 1.0 - value, value));
+    if(orbitTrapping) {
+        return lut(minPointTrap);
+    }
+
+    return lut(value);
     // return vec3(minPointTrap);
 }
 
