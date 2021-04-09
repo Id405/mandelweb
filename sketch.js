@@ -13,7 +13,7 @@ var contrast = 0.02;
 
 var iterationsFactor = 10;
 
-var orbitTrapping = true;
+var orbitTrapping = false;
 
 function preload() {
 	MB = loadShader("assets/shader.vert", "assets/shader.frag");
@@ -50,10 +50,8 @@ function draw() {
 }
 
 function mouseDragged() {
-	if(mouseButton === CENTER) {
-		cameraX += (pmouseX - mouseX)/width * cameraScale;
-		cameraY += (mouseY - pmouseY)/height * cameraScale;
-	}
+	cameraX += (pmouseX - mouseX)/width * cameraScale;
+	cameraY += (mouseY - pmouseY)/height * cameraScale;
 }
 
 function mouseWheel(event) {
