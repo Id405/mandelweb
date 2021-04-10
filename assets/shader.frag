@@ -13,6 +13,7 @@ uniform vec2 g1;
 uniform vec2 g2;
 
 uniform bool orbitTrapping;
+uniform bool antialiasing;
 
 float rand(float n) {
     return fract(sin(n) * 43758.5453123);
@@ -89,8 +90,17 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord ) {
     
     c *= vec2(scale);
     c += vec2(transl);
-    
-    fragColor = vec4(iterate(c), 1.0);
+
+    if(antialiasing) {
+        for(float i=0.0; i<16.0; i++) {
+            vec2 offset = (vec2(rand(i + fragCoord.x), rand(i + fragCoord.y)) * 2.0 - 1.0) * scale * 0.00025;
+            fragColor += vec4(iterate(c + offset), 1.0);
+        }
+
+        fragColor /= 16.0;
+    } else {
+        fragColor = vec4(iterate(c), 1.0);
+    }
 }
 
 void main() { // Call shadertoy main function since this shader was originally written on shadertoy

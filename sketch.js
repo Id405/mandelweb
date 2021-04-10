@@ -14,6 +14,7 @@ var contrast = 0.02;
 var iterationsFactor = 10;
 
 var orbitTrapping = false;
+var antialiasing = true;
 
 function preload() {
 	MB = loadShader("assets/shader.vert", "assets/shader.frag");
@@ -43,6 +44,7 @@ function draw() {
 	MB.setUniform("trap", [trapX, trapY]);
 
 	MB.setUniform("orbitTrapping", orbitTrapping);
+	MB.setUniform("antialiasing", antialiasing);
 
 	rect(0, 0, width, height);
 
@@ -68,5 +70,8 @@ function mouseWheel(event) {
 function keyPressed() {
 	if(key === 's') {
 		orbitTrapping = !orbitTrapping;
+	}
+	if(key === 'a') {
+		antialiasing = !antialiasing;
 	}
 }
