@@ -56,6 +56,7 @@ vec3 iterate(vec2 c) {
     
     float bailout = 2.0;
     vec2 z = vec2(0.0);
+    vec2 lastZ = vec2(0.0);
     float i = 0.0;
     
     for(float index = 0.0; index < 1000.0; index++) {	
@@ -69,9 +70,11 @@ vec3 iterate(vec2 c) {
         }
 	
         float pointTrap = 1.0/distance(z, trap);
+        // float pointTrap = 1.0/distance(lastZ, z);
         minPointTrap = min(minPointTrap, pointTrap);
 
         i = index;
+        lastZ = z;
     }
     
     float value = i/iterations;

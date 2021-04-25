@@ -1,6 +1,6 @@
 var MB;
 
-var scrollSpeed = 0.1;
+var scrollSpeed = 0.001;
 var iterSpeed = 1;
 
 var cameraX = -0.5;
@@ -13,7 +13,7 @@ var contrast = 0.02;
 
 var iterationsFactor = 10;
 
-var orbitTrapping = false;
+var orbitTrapping = true;
 var antialiasing = true;
 
 function preload() {
@@ -30,6 +30,8 @@ function draw() {
 
 	// trapX = (mouseX/width + cameraX) * cameraScale;
 	// trapY = (mouseY/height + cameraY) * cameraScale;
+
+	trapX = sin(millis() / 10000)/2 - 0.5;
 	
 	background(255, 0, 0);
 
@@ -58,6 +60,8 @@ function mouseDragged() {
 
 function mouseWheel(event) {
 	let count = event.delta;
+
+	print(event.delta);
 
 	if(keyCode === SHIFT && keyIsPressed) {
 		print("test");
